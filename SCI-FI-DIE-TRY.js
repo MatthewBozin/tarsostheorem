@@ -19,16 +19,19 @@ var bonusdesc = '';
 
 var epithets = ["the Bloodied", "the Crusher", "War Tooth","the Generous","Underfoot","Hart-Footed","Witch-Breaker","the Sunderer","the Wise","the Grim","the Wide-Eyed","Star-Crossed","the Fair","the Crow","the Amorous","the Frantic","the Old","the Stout","Blood-Drinker","the Swarthy","Battle-wise","the Learned","Deep-Delver","the Champion","the Giant","Far-traveling","Knower-of-Things","the Small","Silvertongue","Stormcrow","the Scarred","the Leech","Star-eyed","the Wild","Bee Friend","the Burned","the Subtle","the Clever","the Young","Teller-of-Tales","Grave Robber","the Whispered","the Gray","the Judge","Bee Stung","the Dreamer","Thick-skulled","the Hound","Strikes-from-Above","Iron-side","Moon Jumper","the Quiet","the Gentle","the Unborn","Who-Sees-All","the Red","Bald Pate","the Exile","Sword-splitter","the Bright","Far-seer","the Proud","the Fortunate","the Honest","the Fair","the Unbowed","the Leaper","the Pious","the Lecherous","the Stingy"];
 
-var mutation = ['Has a third arm.','Have an eye in the back of your head. You can remove it and stick it back in at will.','Can echolocate.','Has claws that can dig rapidly; no fine motor skills.','Gills'];
+var mutation = ['Has a third arm.','Have an eye in the back of your head. You can remove it and stick it back in at will.','Can echolocate.','Has claws that can dig rapidly; no fine motor skills.','Has gills.','Has infravision, cannot see color.','Your blood plasma can heal others: spend hp to heal someone else an equal amount.','Has extremely sensitive hearing.','Sticky hands: you can climb like a spider, but take a whole round to drop/let go of something.'];
 
 var trauma = ['a crippling fear','a haunting loss','a lingering regret','a consuming phobia','crippling insomnia','existential torment','a terrible debt','constant nightmares'];
 
 var weapons = ['club (1d4)','shiv (1d4)','bow (1d6)','spear (1d6)','telescopic baton','baseball bat (1d6)','crowbar (1d6)','falchion (1d6)','brick on a stick (1d6)','knife on a stick (1d6)','axe (1d6)','whip (1d4)','hammer (1d6)','wrench (1d6)','flail (1d6)','halberd (2h, 1d10)','sledgehammer (2h, 1d10)','longbow (1d6)','greatsword (2h, 1d10)','greataxe (2h, 1d10)','rapier (1d6)','crossbow (1d12)','sling (d4)','pitchfork (1d6)','staff (1d6)','knuckledusters (1d4)','shovel (1d6)','cleaver (1d6)','hockey stick (1d4)'];
 
-var armor = ['a gas mask','a welding mask,','some heavy spiked boots','old, worn kevlar vest','motorcycle helmet','football helmet','duct-tape and cardboard LARP chestpiece','shinguards','trash can lid shield'];
+var armor = ['a gas mask','a welding mask,','some heavy spiked boots','worn kevlar vest','motorcycle helmet','football helmet','duct-tape and cardboard LARP chestpiece','shinguards','trash can lid shield','riot shield'];
 
 var potions = ['Herbicide','Sulfuric Acid','Hovering','ANGEL BLOOD','DO NOT, UNDER ANY CIRCUMSTANCE, DRINK','Methamphetamines','Cyanide','*incoherent scribbling*','*the label has worn off*','Rapid Aging','Cleanse Genes','Lobotomy-in-a-Bottle "fun for the whole family!"','Clairvoyance','Telekinesis','Telepathy','Levitation','DRINK THIS, IT WILL GO GREAT, TRUST','Heal Burns','Mutation-in-a-Bottle "impress your friends!" (lasts 5 mins)','Nitro-Glycerin','Reverse Gravity','Rabies-in-a-Bottle "great at parties!"','Echolocation','Chloroform','Truth Serum','Lie Serum','Anaesthetic','Extreme Lubricant','Antitoxin','Miracle-Gro (plants)','Miracle-Gro','ULTRA-STEROID, OH YEEEUH','Focusing','LIQUID ENERGY','Caffeine, pure','Superglue','PLAY DEAD','Fungicide','YOU WILL SEE... EVERYTHING'];
 
+var blessings = [];
+
+var curses = [];
 
 function d(a, b){
 	i = 0;
@@ -66,7 +69,7 @@ function clearAll(){
   raceID = 0;
   backstory = '';
   ED=0;
-  HP=6;
+  HP=4;
   backstory = ["<b>BACKSTORY:</b>"];
   traits = ["<b>TRAITS:</b>"];
   gear = ["<b>INVENTORY</b>"];
@@ -121,10 +124,12 @@ function getRace(zorPR){
     'True Human',
     'Silic',
     'Oozeling',
-    'Android',
-    'Kobold',
-    'Human',
     'Scablander',
+    'Kobold',
+    'Android',
+    'Human',
+    'Human',
+    'Floran',
     'Mantis',
     'Mushroom',
     'Trilobite',
@@ -203,9 +208,15 @@ function getRace(zorPR){
 
     case 'True Human':
         vrace = 'True Human';
-        simpleDesc += 'A remnant of the ancients';
+        simpleDesc += 'A distant remnant of a civilization long buried by time';
         traits.push('Uncorrupted technology was created to serve you. It can detect your genes and will obey your commands.','Immune to mutations.','Some terrible force deep in the cosmos yearns for your demise.');
-        break;                                                
+        break;   
+        
+    case 'Floran':
+        vrace = 'Floran';
+        simpleDesc += 'A sentient humanoid-shaped plant';
+        traits.push('Can photosynthesize in sunlight.',['Can camouflage self in dense vegetation.','Can speak to plants.','Can use an action to take root, becoming immune to forced movement or being knocked down.'][r(3)]);
+        break;
 
     default:
         vrace = 'No race details found.';
@@ -295,9 +306,9 @@ PHY = d(3,6);
 DEX = d(3,6);
 WILL = d(3,6);
 
-if (PHY < 6) ED+=1;
-if (DEX < 6) randItems+=1;
-if (WILL < 6) HP+=1;
+if (PHY < 7) ED+=1;
+if (DEX < 7) randItems+=1;
+if (WILL < 7) HP+=1;
 if (PHY > 14) HP-=2;
 if (DEX > 14) HP-=2;
 if (WILL > 14) HP-=2;
@@ -310,21 +321,21 @@ var z = r(30);
          traits.push(s(mutation));
     break;
     case 28:
-         PHY-=1;
-         DEX-=1;
-         WILL-=1;
-         HP-=1;
+         PHY-=2;
+         DEX-=2;
+         WILL-=2;
+         HP-=2;
          bonusrace = 'Undead ';
          bonusdesc = [' They have returned from death.',' They have peered beyond the veil.',' They persist beyond death.',' Some unknown force animates them beyond death.'][r(4)];
          bonusname = [' the Returned',' the Deathless',' the Endless',' the Abhorrent',' the Vile'][r(5)];
          traits.push('Can return from death by taking a permanent -1 to all stats.');
-         gear.push('the obscene, vile, mysterious energy that animates you beyond death','the deep, existential horror of having glimpsed the void','crippling survivor guilt at being the one who returned from death'[r(3)]);
+         gear.push(['the obscene, vile, mysterious energy that animates you beyond death','the deep, existential horror of having glimpsed the void','crippling survivor guilt at being the one who returned from death'][r(3)]);
     break;
     case 29:
-         PHY-=1;
-         DEX-=1;
-         WILL-=1;
-         HP-=1;
+         PHY-=2;
+         DEX-=2;
+         WILL-=2;
+         HP-=2;
          bonusrace = 'Infested ';
          bonusdesc = [' They have been taken over by a sentient fungus.',' A sentient fungus has invaded their body and consumed their mind.',' They have become an omen of the takeover of the underground fungal overlords.'][r(3)];
          bonusname = ' Cordyceps';
@@ -337,8 +348,8 @@ var z = r(30);
 }     
 
 
-if(r(4)) getRace(r(4)+r(4)+2);
-else getRace(r(7)+r(4));
+if(r(4)) getRace(r(4)+r(4)+3);
+else getRace(r(9)+r(4));
 
 
 
@@ -436,7 +447,7 @@ else getRace(r(7)+r(4));
         case 4:
         p = r(4);
         ED += 1
-        backstory.push('Unlocked your hidden Psionic potential '+['through a traumatic event','by copious trial and error','by contact from mysterious beings in the dreamlands','by being taught'][p]+". [1ED, ability, consequence]");
+        backstory.push('Unlocked your hidden Psionic potential '+['through a traumatic event','by copious trial and error','through contact from mysterious beings in the dreamlands','by being taught'][p]+". [1ED, ability, consequence]");
         traits.push(['Power - Dream Projection: 1ED, project your astral self.','Power - Telekinesis: 1ED, manipulate objects from a distance.','Power - Telepathy: 1ED, listen to and project thoughts.','Power - Illusion: 1ED, create a human-sized illusion.'][r(4)]);
         gear.push([s(trauma),'extreme crippling boredom','a cryptic dream message','ridiculous demand from your mentor'][p]);
         break;
@@ -492,14 +503,14 @@ else getRace(r(7)+r(4));
         HP += 1;
         backstory.push('Learned how to fight '+["honourably","brutishly","with poise","like a bastard"][p]+'. [+1 HP, ability, weapon]');
         traits.push(['Can redirect an attack from a nearby ally to yourself, has 4-in-6 chance of working.','Rage: +1 damage, 1 DR, must make WILL check to do anything but murder those before you.','+1 damage when you have a hand free.','+1 damage when you try a gambit.'][p]);
-        gear.push(['shield (1 DR from frontal attacks)','sledgehammer (2H, 1d10)','rapier (1d6)','machete (1d6)'][p]);
+        gear.push(['shield (1 DR from frontal attacks)','sledgehammer (2H, 1d10, slow)','rapier (1d6)','machete (1d6)'][p]);
         break;
 
         case 13:
         p = r(19);
         backstory.push('Were once '+['a virologist','a trader','a cook','a tinker','a butcher','a doctor','a hunter','a locksmith','a miner','a storyteller','a tailor','a parent','a scholar','a scientist','a gunsmith','a scribe','an apothecary','an engineer','a weaponsmith','an armorsmith'][p]+'. [an ability, two items]');
         traits.push(['Skilled at identifying and diagnosing illnesses.','Skilled at appraising the value of things.','Can make anything taste delicious, with enough ingredients.','Can disassemble things into their component parts.','Can carve rare monster parts from corpses.','Can diagnose injuries and illnesses.','Can identify tracks.','Advantage towards picking locks.','Can detect slopes and drafts in underground passageways.','Can enrapture audiences with tales.','Is always up to date with the latest fashions.','Has near-infinite patience.','Knows almost everything about a subject that is almost too obscure to be useful.','Knowledge on an extremely obscure subject.','Can repair guns, with access to the right parts.','Gains double xp for writing session reports.','Has a chance to know what potion ingredients do without having to test them.','Can attempt to repair mechanical objects.','Only needs 2 Xs to upgrade a weapon.','Only needs 2 Xs to upgrade armor.'][p]);
-        gear.push(['syringe containing a powerful vaccine','a map of trade routes','a stew pot','scrap metal','a cleaver (d6)','stethoscope','bear trap','padlock','belt-lantern','a very engaging tall tale','very fine clothes','a failed marriage','crippling student debts','a specimen in a jar','musket (2h, d12, 1min reload), 10 bullets','pen, ink, and quill','mortar and pestle','measuring tape','small anvil','small anvil'][p]);
+        gear.push(['syringe containing a powerful vaccine','a map of trade routes','a stew pot','scrap metal','a cleaver (d6)','stethoscope','bear trap','padlock','belt-lantern','a very engaging tall tale','very fine clothes','a failed marriage','crippling student debts','a specimen in a jar','musket (2h, d12, 1min reload), 10 bullets','a ballpoint pen','mortar and pestle','measuring tape','small anvil','small anvil'][p]);
         gear.push(['syringe containing a deadly virus','a bag: three doses of potent drugs','a bag: three doses of spices','a bag of nails, nuts, bolts, and screws','three servings of raw meat','stethoscope','bow (1d6), 10 arrows','lockpicks','headlamp','a book of stories, partially written','fabric, needle, and thread','an estranged child out there... somewhere','a PhD thesis, incomplete','a theory, unproven','bag of gun parts','journal, partially full',s(potions),'bag of nails, nuts, bolts, and screws','a unique '+s(weapons)+', unfinished','a unique set of'+s(armor)+', unfinished'][p]);
         break;
 
@@ -579,7 +590,7 @@ else getRace(r(7)+r(4));
 
         case 25:
         backstory.push('Gained a bizarre ability. [an ability]');
-        traits.push(["Decay avoids you, things do not rot while carried by you or when they are on your person.","You can use gestures and body language to communicate your intent to animals.","Cast-Iron Stomach: Advantage to CON tests to resist harmful ingested substances.","You don't leave footprints."][r(4)]);
+        traits.push(["Decay avoids you, things do not rot while carried by you or when they are on your person.","You can use gestures and body language to communicate your intent to animals.","Cast-Iron Stomach: Advantage to PHY tests to resist harmful ingested substances.","You don't leave footprints."][r(4)]);
         break;
 
         case 26:
@@ -1330,7 +1341,123 @@ name = fullname;
 
 
 var items = [
- 'rope','a box of matches','caltrops','geiger counter','bandages','neosporin','rusty helmet','bottle of high-proof liquor','spool of copper wire','fishing rod','a vial that says, '+s(potions),'shield','grapple hook','4 iron spikes','padlock','key #'+d(1,100),'bucket of pitch','wooden pole','sack of flour','bag of nails and hammer (1d6)','bag of lard','three throwing knives (1d6)','chain, 10ft','grimy gambeson','a vial that says, '+s(potions),'lantern and oil','plunger','9 rations','bear trap','bottle of poison','a peasant, utterly devoted to you','healing herbs, three doses','lockpicks','vial of acid','flash drive','a bottle of poison','a small but powerful magnet','a vial that says, '+s(potions),'bottle of laudanum','pliers, loop of wire','jar of glue','weighty iron tongs','two metal flasks','ewer of wine','lute','flint and steel','small tent','small metal mirror','bag of chalk','a vial that says, '+s(potions),'floppy disk','shiny locket','jar of grease','flute','towel','a vial that says, '+s(potions),'strange fungus in a jar','excellent pair of boots (0 slots)','three smoke bombs','a frag grenade','a stick of dynamite','five bags of potent spices','sturdy shears','silver needle and silken thread','large wheel of expensive cheese','three lengths of heavy iron pipe','waterproof bag','a roll of duct tape','a spiral notebook and pencil','ugly gauntlets','satchel of charcoal','warm cloak','pickaxe','heavy chisel','bag of salt','small barrel, rolls easily','a vial that says, '+s(potions),'hefty tarpaulin','jar of leeches','spyglass','fancy clothes','bearskin','drinking horn','bag of questionable mushrooms','whittling knife','a tiny, batteryless shortwave radio','mortar and pestle','a carton of cigarettes','a vial that says, '+s(potions),'molotov cocktail','bag of ball-bearings','adhesive tape','aerosol can of spraypaint','a small thaumic battery (empty)','a small thaumic battery (full)','a small thaumic battery (solar, empty)','a journal, partially full','a truly amazing sandwich','a small, loyal, noisy dog','a bag of salvaged scrap','a can of oil','a can of gasoline','a flashlight (almost out of power)','a parasol','a can of pepper spray','a gas mask','a welding mask','a power drill (almost out of battery)','a tape recorder (almost out of battery)','a small thaumic battery (blood)','energy bar','packet of instant ground coffee'];
+ 'rope',
+ 'a box of matches',
+ 'caltrops',
+ 'geiger counter',
+ 'bandages',
+ 'neosporin',
+ 'rusty helmet',
+ 'bottle of high-proof liquor',
+ 'spool of copper wire',
+ 'fishing rod',
+ 'a vial that says, '+s(potions),
+ 'shield',
+ 'grapple hook',
+ '4 iron spikes',
+ 'padlock',
+ 'key #'+d(1,100),
+ 'bucket of pitch',
+ 'wooden pole',
+ 'sack of flour',
+ 'bag of nails and hammer (1d6)',
+ 'a Claymore anti-personnel mine',
+ 'bag of lard',
+ 'brick of C4, detonator',
+ 'three throwing knives (1d6)',
+ 'chain, 10ft',
+ 'grimy gambeson',
+ 'a vial that says, '+s(potions),
+ 'lantern and oil',
+ 'plunger',
+ '9 rations',
+ 'bear trap',
+ 'bottle of poison',
+ 'a peasant, utterly devoted to you',
+ 'healing herbs, three doses',
+ 'lockpicks',
+ 'vial of acid',
+ 'flash drive',
+ 'a bottle of poison',
+ 'a small but powerful magnet',
+ 'a vial that says, '+s(potions),
+ 'bottle of laudanum',
+ 'pliers, loop of wire',
+ 'jar of glue',
+ 'weighty iron tongs',
+ 'two metal flasks',
+ 'ewer of wine',
+ 'lute',
+ 'flint and steel',
+ 'small tent',
+ 'small metal mirror',
+ 'bag of chalk',
+ 'a vial that says, '+s(potions),
+ 'floppy disk',
+ 'shiny locket',
+ 'laser pointer',
+ 'jar of grease',
+ 'flute',
+ 'towel',
+ 'a vial that says, '+s(potions),
+ 'strange fungus in a jar',
+ 'excellent pair of boots (0 slots)',
+ 'three smoke bombs',
+ 'a frag grenade',
+ 'a stick of dynamite',
+ 'five bags of potent spices',
+ 'sturdy shears',
+ 'silver needle and silken thread',
+ 'large wheel of expensive cheese',
+ 'three lengths of heavy iron pipe',
+ 'large thermos',
+ 'a roll of duct tape',
+ 'a spiral notebook and pencil',
+ 'ugly gauntlets',
+ 'satchel of charcoal',
+ 'warm cloak',
+ 'pickaxe',
+ 'heavy chisel',
+ 'bag of salt',
+ 'small barrel, rolls easily',
+ 'a vial that says, '+s(potions),
+ 'hefty tarpaulin',
+ 'jar of leeches',
+ 'spyglass',
+ 'fancy clothes',
+ 'bearskin',
+ 'drinking horn',
+ 'bag of questionable mushrooms',
+ 'whittling knife',
+ 'a tiny, batteryless shortwave radio',
+ 'mortar and pestle',
+ 'a carton of cigarettes',
+ 'a vial that says, '+s(potions),
+ 'molotov cocktail',
+ 'bag of ball-bearings',
+ 'adhesive tape',
+ 'aerosol can of spraypaint',
+ 'a small thaumic battery (empty)',
+ 'a small thaumic battery (full)',
+ 'a small thaumic battery (solar, empty)',
+ 'a journal, partially full',
+ 'a truly amazing sandwich',
+ 'a small, loyal, noisy dog',
+ 'a bag of salvaged scrap',
+ 'a polaroid camera',
+ 'a can of oil',
+ 'a can of gasoline',
+ 'a flashlight (almost out of power)',
+ 'a parasol',
+ 'a can of pepper spray',
+ 'flashbang grenade',
+ 'a gas mask',
+ 'a welding mask',
+ 'a power drill (almost out of battery)',
+ 'a tape recorder (almost out of battery)',
+ 'a small thaumic battery (blood)',
+ 'nutrihealth (tm) energy bar',
+ 'packet of instant ground coffee'];
 
   for (i = 0; i < randItems; i++) {
       gear.push(s(items));
