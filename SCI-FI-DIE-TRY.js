@@ -1,4 +1,3 @@
-
 var name = '';
 var simpleDesc = '';
 var vrace = '';
@@ -126,6 +125,7 @@ function getRace(zorPR){
     'Oozeling',
     'Kobold',
     'Android',
+    'Human',
     'Human',
     'Human',
     'Floran',
@@ -348,8 +348,12 @@ var z = r(30);
 }     
 
 
-if(r(4)) getRace(r(4)+r(4)+r(5));
-else getRace(r(13));
+if(r(4) < 3) { 
+    getRace(r(4)+r(5)+r(5));
+    }
+else {
+    getRace(r(14));
+    }
 
 
 
@@ -911,6 +915,75 @@ var humanname = [
     ];
     fullname = humanname[r(10)];
       break;
+
+      case 'Floran':
+var floranname1 = [
+"Chlor",
+"Den",
+"Cham",
+"Chrys",
+"Ros",
+"Ras",
+"Dahl",
+"Delph",
+"Di",
+"Ech",
+"Helle",
+"Hy",
+"Ir",
+"Jun",
+"Lil",
+"Oph",
+"Sal",
+"Thy",
+"Tri",
+];
+
+var floranname2 = [
+"dro",
+"dra",
+"al",
+"anth",
+"dox",
+"in",
+"ia",
+"ina",
+"ol",
+"is",
+"i",
+"via",
+"cen",
+"fol",
+"",
+"",
+"",
+"",
+"",
+"",
+""
+];
+
+var floranname3 = [
+"phyll",
+"phyte",
+"cyte",
+"sis",
+"ium",
+"us",
+"cea",
+"em",
+"",
+"",
+"",
+"",
+"",
+"",
+""
+];
+
+fullname = floranname1[r(19)]+floranname2[r(21)]+floranname3[r(15)];
+
+    break;
 
       case 'Scablander':
 var scabname1 = [
