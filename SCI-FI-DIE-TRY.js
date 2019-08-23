@@ -124,14 +124,14 @@ function getRace(zorPR){
     'True Human',
     'Silic',
     'Oozeling',
-    'Scablander',
     'Kobold',
     'Android',
     'Human',
     'Human',
     'Floran',
-    'Mantis',
     'Mushroom',
+    'Mantis',
+    'Scablander',
     'Trilobite',
     'Olm',
   ];
@@ -348,8 +348,8 @@ var z = r(30);
 }     
 
 
-if(r(4)) getRace(r(4)+r(4)+3);
-else getRace(r(9)+r(4));
+if(r(4)) getRace(r(4)+r(4)+r(5));
+else getRace(r(13));
 
 
 
