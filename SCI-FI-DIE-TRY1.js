@@ -1,3 +1,70 @@
+<head>
+  <style>
+
+#rules{
+display: none;
+}
+
+  </style>
+</head>
+
+
+<button onclick="getChar()">SCI FI DIE TRY</button>
+<div id="name"></div>
+<div id="race"></div>
+<div id="class"></div>
+<div id="desc"></div>
+<div id="physique"></div>
+<div id="dexterity"></div>
+<div id="will"></div>
+<div id="ED"></div>
+<div id="HP"></div>
+<p id="backstory"></p>
+<p id="traits"></p>
+<p id="inventory"></p>
+
+<button onclick="fshowrules()">Show/Hide Rules</button>
+<br>
+<div id="rules">
+<b>HP are your hit points. Treat them more like "don't get hit points"; these represent your ability to avoid taking actual damage. When you take damage, subtract it from your HP. If you have no HP left, the damage spills over to one of your stats. <br>
+You regain your HP after a few minutes of rest. You heal 1d6 damage from each of your stats after a long rest (night of sleep).<br>
+ED stands for Energy Dice. You can use as many ED as you want when you use a power. For each one, roll a d6. Powers' effects scale off of the total you roll.</b><br>
+<b>Energy Dice do not replenish on their own. You have to find them out in the world. Some example ways to gain Energy Dice:</b><br>
+-Absorbing it from a thaumic battery.<br>
+-Getting struck by lightning or being heavily irradiated.<br>
+-Getting crit by an enemy power.<br>
+-Eating the brain of an energy-dense creature/wizard.<br>
+<br>
+<b>Character progression is made by marking an X next to an element of your character sheet.</b> <br>
+You can mark an X:<br>
+-at the end of a session (anywhere)<br>
+-being considered the MVP at the end of a session (anywhere)<br>
+-for having the most dramatic moment at the end of a session (anywhere)<br>
+-almost dying (next to the relevant stat)<br>
+-for recieving max damage from an attack (next to HP)<br>
+-for crit failing and suggestiong a worse outcome than the one the DM gives you (anywhere)<br>
+-for failing a roll by 1 (next to the relevant section)<br>
+-for killing a notable creature with a weapon (next to the weapon)<br>
+-using an item in a clever way (next to the item)<br>
+-using a character flaw to your advantage (next to the flaw)<br>
+-doing something historically noteworthy, or that might be the subject of legend (next to your name)<br>
+<b>When you have 3 Xs next to (something), you can spend them to:</b><br>
+-(stat) Roll 3d6, if the result is higher than your stat, increase it by 1.<br>
+-(HP) Roll 3d6, if the result is higher than your HP, increase it by 1.<br>
+-(weapon) Upgrade the weapon with available materials, or add a word to the weapon's name (when the name is complete, the weapon gets magic powers and/or sentience).<br>
+-(item) Either upgrade the item with available materials, or disassemble the item and memorize the schematic of how to craft it.<br>
+-(a power, trait, or drawback) Can change it a little bit, or add an additional benefit (in this way, drawbacks could eventually adapt into beneficial powers).<br>
+-(your name) Add a word to your name (increases fame/renown).<br>
+<br>
+<b>Ways to gain new powers:</b><br>
+-Making a deal with a powerful entity.<br>
+-Making a revolutionary discovery.<br>
+-Stumbling on an ancient/forbidden secret.<br>
+-Being taught by a wise/powerful mentor.<br>
+  
+</div>
+
+<script>
 var name = '';
 var simpleDesc = '';
 var vrace = '';
@@ -5,13 +72,14 @@ var raceID = 0;
 var PHY = 0;
 var DEX = 0;
 var WILL = 0;
-var HP = 6;
-var ED = 0;
-var backstory = [];
+var HP = 4;
+var ED = 2;
+var backstory = ['<b>Before you were an adventurer you...</b>'];
 var traits=[];
 var gear=[];
 var invWeight=0;
 var randItems=0;
+var bonusname = [];
 var bonusrace = '';
 var bonusdesc = '';
 
@@ -26,11 +94,13 @@ var weapons = ['club (1d4)','shiv (1d4)','bow (1d6)','spear (1d6)','telescopic b
 
 var armor = ['a gas mask','a welding mask,','some heavy spiked boots','worn kevlar vest','motorcycle helmet','football helmet','duct-tape and cardboard LARP chestpiece','shinguards','trash can lid shield','riot shield'];
 
-var potions = ['Herbicide','Sulfuric Acid','Hovering','ANGEL BLOOD','DO NOT, UNDER ANY CIRCUMSTANCE, DRINK','Methamphetamines','Cyanide','*incoherent scribbling*','*the label has worn off*','Rapid Aging','Cleanse Genes','Lobotomy-in-a-Bottle "fun for the whole family!"','Clairvoyance','Telekinesis','Telepathy','Levitation','DRINK THIS, IT WILL GO GREAT, TRUST','Heal Burns','Mutation-in-a-Bottle "impress your friends!" (lasts 5 mins)','Nitro-Glycerin','Reverse Gravity','Rabies-in-a-Bottle "great at parties!"','Echolocation','Chloroform','Truth Serum','Lie Serum','Anaesthetic','Extreme Lubricant','Antitoxin','Miracle-Gro (plants)','Miracle-Gro','ULTRA-STEROID, OH YEEEUH','Focusing','LIQUID ENERGY','Caffeine, pure','Superglue','PLAY DEAD','Fungicide','YOU WILL SEE... EVERYTHING'];
+var potions = ['Herbicide','Sulfuric Acid','Hovering','ANGEL BLOOD','DO NOT, UNDER ANY CIRCUMSTANCE, DRINK','Methamphetamines','Cyanide','*incoherent scribbling*','*the label has worn off*','Rapid Aging','Restore Genes','Lobotomy-in-a-Bottle "fun for the whole family!"','Clairvoyance','Telekinesis','Telepathy','Levitation','DRINK THIS, IT WILL GO GREAT, TRUST','Heal Burns','Mutation-in-a-Bottle "impress your friends!" (lasts 5 mins)','Nitro-Glycerin','Reverse Gravity','Rabies-in-a-Bottle "great at parties!"','Echolocation','Chloroform','Truth Serum','Lie Serum','Anaesthetic','Extreme Lubricant','Antitoxin','Miracle-Gro (plants)','Miracle-Gro','ULTRA-STEROID, OH YEEEUH','Focusing','LIQUID ENERGY','Caffeine, pure','Superglue','PLAY DEAD','Fungicide','YOU WILL SEE... EVERYTHING'];
 
-var blessings = [];
+var blessings = ['Lucky: Once per game, you may reroll one roll.','You have inherited the wealth of a long-lost ancestor. It is waiting for you... somewhere.'];
 
-var curses = [];
+var curses = ['You feel the gaze of malevolent entities upon you. They are amused by your suffering. (Once per session, the DM can ask you to reroll a roll.)','You have been chosen to feed the gods sacrifices. (Sacrifice one suitable living creature a week or face terrible consequences.)'];
+
+var psionics = [];
 
 function d(a, b){
 	i = 0;
@@ -62,14 +132,15 @@ function s(array) {
 function clearAll(){
   name = '';
   simpleDesc = '';
+  bonusname = [];
   bonusrace = '';
   bonusdesc = '';
   vrace = '';
   raceID = 0;
   backstory = '';
-  ED=0;
+  ED=2;
   HP=4;
-  backstory = ["<b>BACKSTORY:</b>"];
+  backstory = ['<b>Before you were an adventurer you...</b>'];
   traits = ["<b>TRAITS:</b>"];
   gear = ["<b>INVENTORY</b>"];
   invWeight = -1; //because of the name
@@ -141,13 +212,14 @@ function getRace(zorPR){
   switch(raceID){
     case 'Human':
         vrace = 'Human';
-        simpleDesc += 'Someone';
+        simpleDesc += 'A person';
         traits.push('Switch any two stats.');
         randItems += 1;
         break;
 
     case 'Kobold':
         vrace = 'Kobold';
+        bonusname.push([' the Mischievous',' the Covetous',' the Ingenious',' the Squamous'][r(4)]);
         simpleDesc += 'A tiny mischievous lizard';
         traits.push('Inventive: only needs 2 Xs to upgrade or reverse-engineer an item.','Tiny: cannot use large weapons or armor.');
         gear.push('Some broken down scrap');
@@ -155,6 +227,7 @@ function getRace(zorPR){
 
     case 'Scablander':
         vrace = 'Scablander';
+        bonusname.push([' the Enduring',' the Survivor',' the Austere',' Solemn-Brow',' the Scarred'][r(4)]);
         HP += 1;
         simpleDesc += 'An incredibly tough-skinned ascetic';
         traits.push('Scab Armor: every time you get wounded, gain 1 damage resistance, resets at the end of an encounter.','Cannot wear armor, disadvantage to sneaking, swimming, and running.');
@@ -163,6 +236,7 @@ function getRace(zorPR){
 
     case 'Mantis':
         vrace = 'Mantis';
+        bonusname.push([' the Vicious',' the Prideful',' Throat-Slicer',' Bloody-Claw',', Slayer of Rivals'][r(5)]);
         simpleDesc += 'A proud warrior insect';
         traits.push('Has massive claws.','Can jump up to 30ft as an action.','Cannot do fine motor work or use non-mantis weapons/armor.') ;
         gear.push('Mantis Claws (2d4)'); 
@@ -176,6 +250,7 @@ function getRace(zorPR){
 
     case 'Oozeling':
         vrace = 'Oozeling';
+        bonusname.push([' the Gelatinous',' the Formless',' the Bubbling',' the Frothing',' the Liquiform'][r(5)]);
         simpleDesc += 'A giant amoeba';
         traits.push('Can fit through tiny cracks and tight spaces, given time.','Store items inside of yourself.','All the drawbacks of being a spineless, squishy creature.');
         break;
@@ -189,6 +264,7 @@ function getRace(zorPR){
 
     case 'Silic':
         vrace = 'Silic';
+        bonusname.push([' Many-Facets',' the Glittering',' the Steady',' the Luminous'][r(4)]);
         simpleDesc += 'A figure of glittering crystal';
         traits.push('Energy core: You are a living battery. You gain energy dice from additional sources, you can store up to 5 energy dice, and you can spend an energy dice to heal 1d6 from a stat.','Silicon-based: you cannot heal naturally.'); 
         break;
@@ -214,8 +290,16 @@ function getRace(zorPR){
         
     case 'Floran':
         vrace = 'Floran';
+        bonusname.push([' the Verdant',' Deep-Rooted',' Earth-Bound',' Green-Seer',' Many-Leaved'][r(5)]);
         simpleDesc += 'A sentient humanoid-shaped plant';
         traits.push('Can photosynthesize in sunlight.',['Can camouflage self in dense vegetation.','Can speak to plants.','Can use an action to take root, becoming immune to forced movement or being knocked down.'][r(3)]);
+        break;
+
+    case 'Brain in a Jar':
+        vrace = 'Brain in a Jar';
+        simpleDesc += 'A disembodied brain in a jar';
+        traits.push('Your jar is extremely fragile.','You have no legs, you will need someone to carry you around.','You have extreme psionic abilities.')
+        ED += 3;
         break;
 
     default:
@@ -283,7 +367,7 @@ var description2 = [
 " that has had a rough time already",
 " that searches for the meaning of life",
 " that has big hopes and dreams",
-" that is going to get rich or...",
+" that is going to get rich or die trying",
 " that is driven by crazed ambition",
 " that seeks glory and death",
 " that hopes for a brighter future",
@@ -309,13 +393,30 @@ WILL = d(3,6);
 if (PHY < 7) ED+=1;
 if (DEX < 7) randItems+=1;
 if (WILL < 7) HP+=1;
-if (PHY > 14) HP-=2;
-if (DEX > 14) HP-=2;
-if (WILL > 14) HP-=2;
+if (PHY > 14) ED-=1;
+if (DEX > 14) HP-=1;
+if (WILL > 14) HP-=1;
+if (PHY < 9) ED+=1;
+if (DEX < 9) randItems+=1;
+if (WILL < 9) HP+=1;
+if (PHY > 12) ED-=1;
+if (DEX > 12) HP-=1;
+if (WILL > 12) HP-=1;
+if (PHY>13&&DEX>13&&WILL>13) {
+  bonusname = [' the Cursed',' Ill-Fortuned',' the Doomed'][r(3)];
+  backstory.push('You have been cursed by enigmatic beings from beyond the veil.')
+  traits.push(s(curses));
+}
+
+if (PHY<8&&DEX<8&&WILL<8) {
+  bonusname = [' the Blessed',' the Auspicious',' the Destined'][r(3)];
+  backstory.push('You have been blessed by enigmatic beings from beyond the veil.')
+  traits.push(s(blessings));
+}
 
 var z = r(30);
     switch(z){
-    case 24: case 25: case 26: case 27:
+    case 25: case 26: case 27:
          bonusrace = 'Mutated ';
          bonusdesc = ' They have been horribly mutated.';
          traits.push(s(mutation));
@@ -327,7 +428,7 @@ var z = r(30);
          HP-=2;
          bonusrace = 'Undead ';
          bonusdesc = [' They have returned from death.',' They have peered beyond the veil.',' They persist beyond death.',' Some unknown force animates them beyond death.'][r(4)];
-         bonusname = [' the Returned',' the Deathless',' the Endless',' the Abhorrent',' the Vile'][r(5)];
+         bonusname.push([' the Returned',' the Deathless',' the Endless',' the Abhorrent',' the Vile'][r(5)]);
          traits.push('Can return from death by taking a permanent -1 to all stats.');
          gear.push(['the obscene, vile, mysterious energy that animates you beyond death','the deep, existential horror of having glimpsed the void','crippling survivor guilt at being the one who returned from death'][r(3)]);
     break;
@@ -338,7 +439,7 @@ var z = r(30);
          HP-=2;
          bonusrace = 'Infested ';
          bonusdesc = [' They have been taken over by a sentient fungus.',' A sentient fungus has invaded their body and consumed their mind.',' They have become an omen of the takeover of the underground fungal overlords.'][r(3)];
-         bonusname = ' Cordyceps';
+         bonusname.push([' Cordyceps',' the Infested',' the Spore-Ridden'][r(3)]);
          traits.push('If you die, you can infest a nearby dead body by taking a permanent -1 to all stats.');
          gear.push('the fungal infestation that puppetteers your meat corpse');
     break;
@@ -408,7 +509,6 @@ else {
 
 
 
-  backstory = ['<b>Before you were an adventurer you...</b>'];
 
   var x = [];
   while(x.length<4) {
@@ -427,11 +527,13 @@ else {
         backstory.push('Peered through the veil of reality and came to a terrifying conclusion: '+['that everything you know is a deception brought on by unseen puppet masters.','that every event and action has already been predetermined; you are but a helpless insect caught in the amber of fate.','that all things are subject to the sheer chaos of probability, and nothing is beyond doubt; the future that you have taken for granted could be shattered by the slightest misstep.'][p]);
         traits.push(['Once per lifetime, your sheer disbelief can grant you total immunity to a threat, attack, power, or concept.','Once per lifetime, you may predict something, and it will happen exactly as you say.','Once per lifetime, you may cast doubt upon something that is universally known to be true: for this specific instance, it is false.'][p]);
         gear.push(['crippling paranoia of unseen puppet masters','existential dread of having no agency in this world','crippling fear that the slightest decision could lead the world to a spiral of disaster'][p]);
+        bonusname.push([' the Witness',' the Perceiver',' Fate-Deceived'][r(3)]);
         break;
 
         case 1:
         backstory.push('"Acquired" a powerful artefact, not without consequence.');
         gear.push(['Dimensional Storage Box (+10 inventory slots, complicated to access,', 'Small Ray Gun (1d20 force damage, explodes on a crit fail,', 'Rocket Boots (DEX check to take-off, maneuver or land, damaged on a crit fail,', 'Telepathic Helm (Electrodes extend into brain: 1 damage to take on or off. WIS check to project thoughts with force or subtlety,', 'Metabolic Strength Gauntlets (Electrodes extend into veins: 1 damage to take on or off. +2 STR mod, doubles food requirements, cannot be used while hungry,','Cup-Sized Portal to a Place of Endless Water (moderately brackish, possibly not endless)','Energy Amplifier (Energy dice spent in the vicinity are d8s instead of d6s)'][r(6)]+[' continually pursued by previous owners)',' a tempting target for thieves)',' marked by irritating prophecy)',' subtly cursed)'][r(4)]);
+        bonusname.push([' Relic-Seeker',' Tomb-Robber'][r(2)]);
         break;
 
         case 2:
@@ -440,38 +542,45 @@ else {
         backstory.push('Joined the cult of the '+['Dreamwalkers','Scar-Speakers','Flesh Apostles','Tech Wardens','Machine Gods'][p]+'. [a power and a piece of gear]');
         traits.push(['Power - Hypnosis: 1ED, puts a target that can see you to sleep.','Power - Transmit scar: Politely try to convince a wound to move from an ally to an enemy: spend 1ED, roll a 1d6, an ally heals that amount and an enemy takes that amount.','Power - Flesh Sculpting: 1ED/round, your hands can heal or inflict 1d6 damage per round.','Power - EMP burst: 1ED, nearby tech saves or gets shut down, sentient tech gets disrupted.','Power - Dominate Tech: Once per day, can release a virus that will infect technology and bring it under your control, 1ED/round.'][p]);
         gear.push(['Dreamknife. Deals 2d6 damage to sleeping targets, can only affect sleeping targets.','Ritual scarring dagger: deal 1d6 damage to a stat, gain 1ED.','A stem cell blob, one use, that grants a beneficial mutation OR cures all stat damage OR cures a disease/poison.','A thrice-sealed data cube containing a corrupted AI.','A data cube containing the location of the corpse of a dead machine god.'][p]);
+        bonusname.push([[' Dreamweaver',' Sleepwalker',' the Waking Dreamer'][r(3)],[' the Scarred',' Many-Scar'][r(2)],[' Meat-and-Gristle',' Flesh-Carver'][r(2)],[' Relic Warder',', Guardian of the Vault'][r(2)],[' of the Silicon Eye',', Cog in the Great Machine'][r(2)]][p]);
         break;
 
         case 3:
         ED += 1
-        backstory.push('Became afflicted with unstable genes. [shapeshifting, a bit of lycanthropy]');
-        traits.push('Shapeshifter: 1ED, transform into a human-sized '+['Bird', 'Wolf', 'Cat', 'Goat', 'Horse', 'Monkey', 'Crab', 'Snake'][r(8)]+'. On full moons, you involuntarily shapeshift. On new moons, you cannot shapeshift.');
+        backstory.push('Became afflicted with unstable genes. [shapeshifting]');
+        traits.push('Shapeshifter: 1ED, transform into a human-sized '+['Pterodactyl', 'Centipede', 'Cat', 'Goat', 'Horse', 'Monkey', 'Crab', 'Snake'][r(8)]);
+        bonusname.push([' the Shifting',' Gene-Shifter',' the Changeling'][r(3)]);
         break;
 
         case 4:
         p = r(4);
-        ED += 1
+        ED += 1;
         backstory.push('Unlocked your hidden Psionic potential '+['through a traumatic event','by copious trial and error','through contact from mysterious beings in the dreamlands','by being taught'][p]+". [1ED, ability, consequence]");
         traits.push(['Power - Dream Projection: 1ED, project your astral self.','Power - Telekinesis: 1ED, manipulate objects from a distance.','Power - Telepathy: 1ED, listen to and project thoughts.','Power - Illusion: 1ED, create a human-sized illusion.'][r(4)]);
         gear.push([s(trauma),'extreme crippling boredom','a cryptic dream message','ridiculous demand from your mentor'][p]);
+        bonusname.push([' the Awakened',' of the Third Eye',' the Cerebral'][r(3)]);
         break;
 
         case 5:
         p = r(4);
         backstory.push('Developed an uncanny knack for '+['measurement','being in the right place at the right time','remembering things','never getting lost'][p]+'. [ability]');
         traits.push(['Can measure the exact height and width of objects by looking at them.','Lucky: can reroll a d20 roll once per session.','Has perfect memory.','Always knows where the cardinal directions are.'][p]);
+        HP += 1;
+        bonusname.push([[' the Precise',' the Exact'][r(2)],[' the Fortunate',' the Auspicious'][r(2)],', Who Remembers',' Who Knows the Way'][r(4)]);
         break;
 
         case 6:
         ED += 1;
         backstory.push('Had a strange energy sequence encrypted into your genes. [1ED, Power]');
         traits.push(["Power - Decryption: (WILL+result) contest, if you win, counter or dispel an enemy's Power.",'Power - Brain swap: Switch bodies with target, duration = result. Large/powerful targets get a save.','Power - Command: Target must obey one word command. Save if harmful to self. Duration = result.','Power - Gaseous form: Unwilling targets get save; duration = result.','Power - Gelatinous form: Unwilling targets get save; duration = result.','Power - Ignite: Lights target on fire. Flame-resistant targets get save; duration = result.','Power - Levitate: Duration = result, lasts half as long on heavy targets; unwilling target gets save.'][r(6)]);
+        bonusname.push([' of the Sequence',' the Encrypted'][r(2)]);
         break;
 
         case 7:
         p = r(15);
         backstory.push('Learned a new fighting style from '+['psion hunters.','stage performers.','guardians.','dervishes.','famed warriors.','frustrated fighters.','patient killers.','hunters.','berserkers.','thieves.','beast slayers.','your rival.','barbarians.','a police force.'][p]);
         traits.push("Fighting style: +1 Damage "+['for every Power you have seen a target use.','for every insult that has been directed at you.','for every ally the target has damaged.','for every two enemies you are adjacent to.','against a target that knows your name, +2 Damage if they also know your history.','every time you miss an attack.','for every round you left your sword in your scabbard.','if your target is being flanked, +2 Damage if they are surrounded.',"each time you've taken damage.","if you hit the target with one of their possessions, +2 Damage if they didn't know you had it.",'if your target is bigger than you.','every time your rival, another character, lands a killing blow.',"if you've bitten someone this fight.",'for every crime you know the target has committed.'][p]);
+        bonusname.push([[' Brainscourge',' the Inquisitor'][r(2)],[' the Troubadour',' the Artful'][r(2)],[', Stalwart Protector',' the Bulwark'][r(2)],[' the Whirling',' the Graceful',' the Dancer'][r(3)],[' the Famed',', Widely Renowned'][r(2)],[' the Angry',' the Easily Frustrated'][r(2)],[' the Patient',' Who Waits and Brings the End'][r(2)],', Tracker of Beasts',[' the Enraged',' the Bloodthirsty'][r(2)],[' the Crafty',' the Sly'][r(2)],' Slayer of Beasts','',' the Barbarian',', Officer of the Law'][p]);
         break;
 
         case 8:
@@ -479,6 +588,7 @@ else {
         backstory.push('Learned how to survive in '+['the mad city of Qorenclave.','the great scab desert.','the forest of feral joy.'][p]+' [an ability, a consequence]');
         traits.push(['Can fake insanity very convincingly.','Hunger and thirst at half the normal rate.','Has advantage on saves vs. mind-altering effects.'][p]);
         gear.push(['a favor, owed by a complete lunatic','horrifying sunburns',s(trauma)][p]);
+        bonusname.push([' of the Mad City',' of the Scablands',' of the Feral Forest'][p]);
         break;
 
         case 9:
@@ -486,6 +596,7 @@ else {
         backstory.push('Found religion: you'+[' learned the ways of psionic purity at a mountaintop monastery',' began to worship the great War Machine',' learned from an eccentric hermit how to ascend beyond hunger and thirst','learned the ways of flesh-knitting from the priests of the Cathedral of All Flesh',' worship the all-knowing search engine oracle',' worship a mysterious Spirit of nonviolence',' worship a sinister pain-monger Spirit',' fell into the twisted ways of the Gilded Inquisition',' worship a wise and manipulative psychological Spirit',' worship a Spirit dedicated to cleansing the land'][p]+". [sacred power, condition, and sacred object]");
         traits.push('Ritual: '+['Power - Mental Purity (WILL + result contest) Remove a psionic or psychological effect.','Power - Energy Smite (add result to a damage roll). Lose 1ED if you ever back down from a fight.','Fasting (do not need to consume food or water for one day). Lose 1ED if you ever indulge in luxury.','Heal (1d6 hp). Lose 1ED if you accept any other belief or superstition.','Query (ask question, yes or no answer). Lose 1ED if you tell a blatant lie.','Sanctuary (within a small area, nobody can cause direct harm). Lose 1ED if you intentionally cause harm to another.','Pain Link (target takes the same damage as you). Lose 1ED when you are healed from a non-natural source.','Glare from On High (for one hour, you know the exact location of the target). Lose 1ED if you let a heretic escape.','Detect Lies (1ED, lasts one hour). Lose 1ED if you tell a blatant lie.','Cleanse (take 1d6 damage, remove an effect, disease, or poison). Lose 1ED if you demonstrate excessive pride.'][p]);
         gear.push(['Silicon Diadem (+1 save vs. Psionics, breaks if you crit fail)','Blood-Blessed Chainsaw (2d6, noisy, slow, cannot shut off until it tastes blood)','Unassuming Staff (1d6, can transform into any mundane melee weapon)','Holy Stem-Cell Tumor (consume to heal fully, or gain a mutation)','Combat Query HUD (WILL test to gain information about enemy combat stats)','Force-Shield Emitter (1ED: creates 10foot by 10foot pane of force)','Thaumic Battery (pain) (refills when you gain a trauma due to physical injury)','Shard of True-Crystal (1d3, +1 damage for each lie the target has told you)','Implant: Cordial Countenance (people like you, +1 to reaction rolls)','Blessed Hyperdimensional Disposal Unit (small box, anything placed inside will disappear.)'][p]);
+        bonusname.push([[' the Purified',' the Transcendant',' of the Monastery'][r(3)],[', Bringer of Carnage',', Cog in the War Machine',' of Blood and Oil'][r(3)],[' the Transcendant',' Traveler of the Seven Gates'][r(2)],[' the Hierophant',' the Pious'][r(2)],[' who Sees all at the Press of a Button',' the Wildcard',', Dataseer'],[' the Peaceful',' the Tranquil',', Queller of Conflicts'][r(3)],[' Pain-Monger',' the Agonizer',' the Masochistic'][r(3)],[', Who Asks Sharp Questions',', Inquisitor',' the Gilded'][r(3)],[' the Guru',' the Wise',', Knower of Many Things'][r(2)],', Guardian of the Wild Places'][p]);
         break;
 
         case 10:
@@ -493,6 +604,7 @@ else {
         backstory.push('Survived a '+['genocide','monster attack','psionic assault','deadly fall','duel against your greatest foe'][p]+'. [a trait, an item]');
         traits.push(['You are the last surviving member of your village.','Scarring: add '+r(4)+' to your hp.','+2 save vs. psionics.','Fall damage is halved.','A 1-in-6 save vs. death until you have your sweet, sweet vengeance.'][p]);
         gear.push(['priceless last heirloom of your people.','scars: 2 free Xs when you slay the monster that gave them to you.',s(trauma),'climbing gear','an oath of vengeance: 3 free Xs when it is fulfilled.'][p]);
+        bonusname.push([[', Last of Their Kind',' the Final'][r(2)],[', Survivalist',' the Scarred'][r(2)],[' of the Shielded Mind',' the Mentalist'][r(2)],[' Lightfoot',' Nine-Lives',' "Twinkletoes"'][r(3)],[' the Rival','the Challenger'][r(2)]][p]);
         break;
 
         case 11:
@@ -500,6 +612,7 @@ else {
         backstory.push("Studied under a master "+['Artisan','Tinker','Builder','Crafter','Mechanist'][r(5)]+". [2 Xs on an item, item schematic]");
         traits.push('Put two Xs on any one item in your inventory.','Gain a schematic for one of the non-high-tech items in your inventory.');
         randItems += 1;
+        bonusname.push([' the Crafty',' the Resourceful',' the Artisan',' the Builder'][r(4)])
         break;
 
         case 12:
@@ -508,6 +621,7 @@ else {
         backstory.push('Learned how to fight '+["honourably","brutishly","with poise","like a bastard"][p]+'. [+1 HP, ability, weapon]');
         traits.push(['Can redirect an attack from a nearby ally to yourself, has 4-in-6 chance of working.','Rage: +1 damage, 1 DR, must make WILL check to do anything but murder those before you.','+1 damage when you have a hand free.','+1 damage when you try a gambit.'][p]);
         gear.push(['shield (1 DR from frontal attacks)','sledgehammer (2H, 1d10, slow)','rapier (1d6)','machete (1d6)'][p]);
+        bonusname.push([[' the Honorable',' the Noble'][r(2)],[' the Brutish',' the Savage',' the Fierce'][r(3)],[' the Poised',' the Graceful',', Who Fights With Artistry',' the Deft'][r(4)],[' the Bastard',' the Cruel',' the Spiteful'][r(3)]][p]);
         break;
 
         case 13:
@@ -522,8 +636,9 @@ else {
         p = r(4);
         backstory.push("Spent some time "+["in the army","as a mercenary","thieving and looting","on the hard roads"][p]+". [+1 HP and 2 items]");
         HP += 1;
-        gear.push(['a musket with bayonet (d12, one minute reload)','flintlock pistol (d10, one minute reload), 5 bullets','a set of lockpicks','a well worn traveling cloak (0 slots, significantly decreases weather/environmental effects)'][p]);
+        gear.push(['semi-auto rifle (d10), 5 bullets','handgun (d8), 5 bullets','a set of lockpicks','well-worn traveling garb (0 slots, significantly decreases weather/environmental effects)'][p]);
         gear.push(['an old army buddy owes you a favor','mercenary mission contract with lucrative reward','a fellow thief owes you a favor','well worn, comfortable boots (0 slots, cross difficult terrain without being slowed)'][p]);
+        bonusname.push([[' the Deserter',', Lance-Corporal',', Drill Sergeant'][r(3)],[' the Mercenary',', Gun for Hire'][r(2)],[' the Thief',' the Brigand'][r(2)],[' the Wanderer',' the Nomad'][r(2)][p]]);
         break;
 
         case 15:
@@ -531,18 +646,21 @@ else {
         backstory.push("Gained a contact "+["in a city-state","among eccentric wizards","among tribal shamans","amongst the nobility","in the dark places","in the dream world","deep in the forest"][p]+", they "+["owe you one","saved your life once","were a good friend back then","are the cause of your adventures","know your true nature","speak to you in your sleep"][r(6)]+". [a friend and a favor]");
         traits.push(['Has an urban socialite friend.','Has a wizard friend.','Has a shaman friend.','Has a friend in a high place.','Has a friend in the dark places.','Has a friend in the dream world.','Has a friend hidden in the forest.'][p]);
         gear.push('a favor, owed to you by a friend');
+        bonusname.push([[' the Urban',' the Socialite',' the Cosmopolitan'][r(3)],[' the Arcane',' Wizard-Friend',' the Eccentric'][r(3)],[' Shaman-Friend',', Attuned with the Spirits',', Honorary Member of the Tribe'][r(3)],[', Esquire',', the Esteemed',' of the Landed Nobility'][r(3)],[' of the Dark Places',' the Shaded',' the Hidden'][r(3)],[' the Dreamer',' of the Dream World'][r(2)],[' of the Deep Woods',' Forest-Friend'][r(2)]][p]);
         break;
 
         case 16:
         backstory.push('Gained a hideous but possibly useful mutation.');
         HP += 1;
         traits.push(s(mutation));
+        bonusname.push([' the Hideous',' the Adapted',' the Marred',' the Ugly'][r(4)]);
         break;
 
         case 17:
         p = r(4);
         backstory.push('Learned a clever trick from '+['cat burglars.','acrobats.','rangers.','a stage magician.'][p]+' [an ability]');
         traits.push(['Cat Feet (reduce fall damage by 20ft, you can move after attacking in a round)','Lightweight (while unarmoured and under half inventory slots, advantage on DEX checks)','Danger Sense (50% chance to negate surprise, roll under WILL to remember details about a non-unique threat)','Fast hands: Can use two items per round.'][p]);
+        bonusname.push([[' Lightfoot',' Nine-Lives'][r(2)],[' the Acrobatic',' the Balanced'][r(2)],[' Wildstrider',' the Roamer'][r(2)],[' the Astounding',' the Prestidigitator'][r(2)]][[p]]);
         break;
 
         case 18:
@@ -550,12 +668,14 @@ else {
         backstory.push('Learned how to '+['forge documents.','smuggle goods.','steal.','spy.','climb.','gamble and win.'][p]+' [an ability]');
         traits.push('Advantage on checks made to '+['forge documents.','hide items on or about your person.','steal things without anyone noticing.','eavesdrop or disguise yourself.','climb.','cheat at gambling.'][p]);
         gear.push(['paper, quill and ink in a writing case','stolen goods ('+['medicine)','clothes)','metal)','food)'][r(4)],'satchel of "medicine"','codes and passphrases, slightly out of date','climbing gear','marked cards and loaded dice'][p]);
+        bonusname.push([' the Scoundrel',' the Unlawful',', Wanted By the Law',' the Stealthy'][r(4)]);
         break;
 
         case 19:
         backstory.push('Spent some time alone in the wilds. [a trait and an animal companion]');
         traits.push(['2-in-6 chance not to be surprised.','A highly acute sense of smell.','+1 Damage against creatures that are at least one size category larger than you.','Can travel through difficult terrain without being slowed.','Can communicate intent to animals through gestures.'][r(5)]);
-        gear.push("a friendly "+['Trillipede','Hyper-Sloth','GigAmoeba','Vine-Dog','Giant Roach','Possum','QuickSlug','Badger'][r(8)]+" companion.");
+        gear.push("a friendly "+['Trillipede','Hyper-Sloth','GigAmoeba','Vine-Dog','Giant Roach','Possum','QuickSlug','Dire Badger'][r(8)]+" companion.");
+        bonusname.push([' Animal-Friend',' Beast-Tamer',', Tamer of Beasts',', Caretaker'][r(4)]);
         break;
 
         case 20:
@@ -563,6 +683,7 @@ else {
         backstory.push('Hunted down a'+[' chimerical monstrosity',' deadly giant insectoid',' slithering abomination','n ocular fiend',' giant amoeba'][p]+'. [an ability, a monster part]');
         traits.push('+1 damage against a creature for each size category that it is larger than you.')
         gear.push(['skinned pelt, constantly shifting','severed venomous stinger','glowing monster guts','a severed eyestalk, constantly watching','chunk of primordial cell matter'][p]);
+        bonusname.push([', Slayer',' Bane of Beasts',' Monstrosity-Bane',', Apex Predator'][r(4)]);
         break;
 
         case 21:
@@ -570,12 +691,14 @@ else {
         backstory.push(['Looted a terrifying weapon off of a dead adventurer.','Stole a terrifying weapon from a military shipment.','Deserted the military, taking your weapon with you.'][p]+' [a weapon, a consequence]');
         gear.push(['scoped bolt-action sniper rifle (2h, 1d12, long range), 8 bullets','pump-action shotgun (2h, 2d8, short range), 6 slugs','automatic machine gun (requires setup, one person to aim and one to feed ammo, 1d6, 6 shots/round), 36 bullets','flamethrower (ignites in cone, could explode), a tank of fuel(3 shots)'][r(4)]);
         gear.push([`the pesky neutrino-ghost of a dead adventurer`,`the emnity of a powerful nation's military`,`the hangman's noose, waiting for you should you ever return`][p]);
+        bonusname.push([', Inadvertent Gunslinger',' the Gunslinger',' Deadeye',', On the Run'][r(4)]);
         break;
         
         case 22:
         backstory.push('Discovered an aptitude for leadership. [an ability, a follower]');
         traits.push('Inspiring (the first time an ally assists you each session they - get advantage on their next damage roll, or heal 1d4 WILL stat damage, or mark an X.)');
         gear.push('a follower, '+['mostly obedient','here to make a quick buck','here to live out one of the stories','utterly besotted with you','looking for the truth','hoping to see you in action'][r(6)]);
+        bonusname.push([' the Inspiring',', Inspiration of the Masses',', Chieftain',', First Among Equals'][r(4)]);
         break;
         
        case 23:
@@ -584,25 +707,29 @@ else {
         backstory.push('Gained a cybernetic augmentation '+['through reconstructive surgery.','due to volunteering for an experiment.','from an involuntary experiment.','from a nanobot infection.'][r(4)]+' [a skill, an implant]');
         traits.push(['Skill - Inbuilt capacitor: 1ED, you can absorb/redirect 1ED from an electrical attack. You can also siphon energy from an electrical source: take 1d6 damage to a stat, gain an ED.','Skill - Pneumatic frame: 1ED, you can double damage for an attack or get advantage on a PHY check.','Optical Medscanner: 1ED, scan a biological creature to learn its current HP and any diseases, wounds, or afflictions it might be suffering from.','Electromagnetic Sensor Array: Series of antennae protruding from your skull. When a nearby ED is spent, the sensors tell you what type of ability is being used.','Reassembling Nanoface: 1ED, latent nanobots emerge from your sinus cavity and rapidly reconstruct your face to look like another member of your race.'][p]);
         gear.push(['Implant: inbuilt capacitor','Implant: pneumatic frame','Implant: optical medscanner','Implant: electromagnetic sensor array','Implant: reassembling nanoface'][p]);
+        bonusname.push([' the Rebuilt',' the Augmented',' the Reconstructed'][r(3)]);
         break;
 
         case 24:
         p = r(4);
         backstory.push('You became famous for '+['being a complete and utter scoundrel','being a monster on the battlefield','your cunning battlefield tactics','smiting your foes'][p]+'. [an ability]');
         traits.push([`+1 damage versus foes that cannot see you.`,`Staggering blow: if you deal more than half an enemy's hp in damage in a single hit, they must save or be stunned.`,`Tactic: spend your action to have a nearby ally attack.`,`Smite: when you attack, spend 1ED. Extra damage = result.`][p]);
+        bonusname.push([', Famed Scoundrel',' Warmonger',' the Cunning',' the Deadly'][p]);
         break;
 
         case 25:
         backstory.push('Gained a bizarre ability. [an ability]');
         traits.push(["Decay avoids you, things do not rot while carried by you or when they are on your person.","You can use gestures and body language to communicate your intent to animals.","Cast-Iron Stomach: Advantage to PHY tests to resist harmful ingested substances.","You don't leave footprints."][r(4)]);
+        bonusname.push([[', Whom Decay Avoids',' Herald of Preservation'][r(2)],' Beast-Speaker',' Cast-Iron',' the Traceless'][p]);
         break;
 
         case 26:
         p = r(7);
         ED += 1
-        backstory.push('Made a deal with'+['a voice from deep within the earth','a voice from the deepest part of your dreams','a voice from the stars','a mysterious spirit of the land','a sentient virus','the silver queen','the machine gods'][p]+'[1ED, a power, a cost]');
+        backstory.push('Made a deal with '+['a voice from deep within the earth','a voice from the deepest part of your dreams','a voice from the stars','a mysterious spirit of the land','a sentient virus','the silver queen','the machine gods'][p]+'[1ED, a power, a cost]');
         traits.push(['Power - Shape earth: result = amount shaped.','Power - Dream Augury: 1ED/question, result = accuracy.','Power - Summon: Go on, use it. You know you want to.','Power - Confusion: Target takes random actions, duration = result, powerful foes get a save.','Power - Tame Virus: You can tame viruses and store them within yourself to inflict on others. 1ED to manipulate.','Power - Blink: Small teleport, does not use an action. Distance = result.','Power - Flesh to Steel: Duration = result. Powerful foes get a save.'][p]);
         gear.push('a distinct lack of '+['a soul','family or friends','a home to return to','mental stability','the ability to love','a certain future'][r(6)]);
+        bonusname.push([' Enraptured',' Pact-Bound',' Star-Crossed',' Soulbound',', Infected',' the Argent',' Mechanicus'][p]);
         break;
         
         case 27:
@@ -610,12 +737,14 @@ else {
         backstory.push('Joined the martial order of the '+['Qoren Wraiths','Mantis Monks','Geneshifters'][p]+' [an ability, an item]');
         traits.push(['Flash strike: when you kill someone, spend 1ED to blink a short distance and attack again.','Spend 1ED and your action to leap 30ft and make an attack. If you deal max damage, knock the target off their feet.','When you strike someone, spend 1ED to steal their appearance, a mutation, or a characteristic for a day.'][p]);
         gear.push(['a thin blade, its form flickering like silver fire (can shift in and out of existence at will, appearing in your hand)','inner peace (erase both this and a trauma)','constantly shifting weapon (can imitate any nonmagical melee weapon)'][p]);
+        bonusname.push([' Wraithstorm',' of the Ascendant Way',' the Mutable'][p]);
         break;
         
         case 28:
         p = r(4);
         backstory.push('Has beautiful, terrifying dreams of'+['the heat death of the universe','being a pawn in an imaginary game played by puppet master gods','the world ending in a hail of golden fire','endless screaming'][p]+'.');
-        traits.push(['Notify the GM that you got this result. They will know what to do. This is not ominous at all...'])
+        traits.push(['Notify the GM that you got this result. They will know what to do. This is not ominous at all...']);
+        bonusname.push([' the Entropic',', Breaker of the Fourth Wall',', Herald of the End',' the Completely Screwed'][p]);
         break;
 
         default:
@@ -1420,14 +1549,13 @@ var items = [
  'geiger counter',
  'bandages',
  'neosporin',
- 'rusty helmet',
  'bottle of high-proof liquor',
  'spool of copper wire',
  'fishing rod',
- 'a vial that says, '+s(potions),
+ 'a canister labeled, '+s(potions),
  'shield',
  'grapple hook',
- '4 iron spikes',
+ 'a bucket of iron spikes',
  'padlock',
  'key #'+d(1,100),
  'bucket of pitch',
@@ -1435,12 +1563,13 @@ var items = [
  'sack of flour',
  'bag of nails and hammer (1d6)',
  'a Claymore anti-personnel mine',
- 'bag of lard',
+ 'a canister of lard',
+ 'a canister of gasoline',
  'brick of C4, detonator',
  'three throwing knives (1d6)',
  'chain, 10ft',
  'grimy gambeson',
- 'a vial that says, '+s(potions),
+ 'a bottle labeled, '+s(potions),
  'lantern and oil',
  'plunger',
  '9 rations',
@@ -1453,30 +1582,32 @@ var items = [
  'flash drive',
  'a bottle of poison',
  'a small but powerful magnet',
- 'a vial that says, '+s(potions),
+ 'an ampoule labeled, '+s(potions),
  'bottle of laudanum',
  'pliers, loop of wire',
  'jar of glue',
  'weighty iron tongs',
  'two metal flasks',
- 'ewer of wine',
- 'lute',
  'flint and steel',
  'small tent',
  'small metal mirror',
  'bag of chalk',
- 'a vial that says, '+s(potions),
+ 'a beaker labeled, '+s(potions),
  'floppy disk',
  'shiny locket',
  'laser pointer',
- 'jar of grease',
+ 'canister of grease',
  'flute',
  'towel',
- 'a vial that says, '+s(potions),
+ 'a vial labeled, '+s(potions),
  'strange fungus in a jar',
- 'excellent pair of boots (0 slots)',
+ 'heavy-duty boots',
  'three smoke bombs',
  'a frag grenade',
+ 'a smoke grenade',
+ 'an EMP grenade',
+ 'a healing nanite grenade',
+ 'a repair nanite grenade',
  'a stick of dynamite',
  'five bags of potent spices',
  'sturdy shears',
@@ -1486,22 +1617,21 @@ var items = [
  'large thermos',
  'a roll of duct tape',
  'a spiral notebook and pencil',
- 'ugly gauntlets',
  'satchel of charcoal',
- 'warm cloak',
+ 'warm jacket',
  'pickaxe',
- 'heavy chisel',
+ 'jackhammer',
  'bag of salt',
- 'small barrel, rolls easily',
+ 'empty oil drum',
  'a vial that says, '+s(potions),
  'hefty tarpaulin',
- 'jar of leeches',
- 'spyglass',
+ 'jar of space-leeches',
+ 'binoculars',
  'fancy clothes',
  'bearskin',
- 'drinking horn',
+ 'surgical saw',
  'bag of questionable mushrooms',
- 'whittling knife',
+ 'whittlin knife',
  'a tiny, batteryless shortwave radio',
  'mortar and pestle',
  'a carton of cigarettes',
@@ -1517,7 +1647,7 @@ var items = [
  'a truly amazing sandwich',
  'a small, loyal, noisy dog',
  'a bag of salvaged scrap',
- 'a polaroid camera',
+ 'a digital camera',
  'a can of oil',
  'a can of gasoline',
  'a flashlight (almost out of power)',
@@ -1528,6 +1658,7 @@ var items = [
  'a welding mask',
  'a power drill (almost out of battery)',
  'a tape recorder (almost out of battery)',
+ 'a nailgun (almost out of battery)',
  'a small thaumic battery (blood)',
  'nutrihealth (tm) energy bar',
  'packet of instant ground coffee'];
@@ -1536,7 +1667,7 @@ var items = [
       gear.push(s(items));
   }
 
-gear.push("3 torches","3 rations");
+gear.push("3 small thaumic batteries","3 rations");
 
 if (gear.includes("9 rations")) invWeight += 2;
 if (gear.includes('a peasant, utterly devoted to you')) invWeight -= 1;
@@ -1549,19 +1680,20 @@ if (gear.includes('a peasant, utterly devoted to you')) invWeight -= 1;
 
 
 
+bonusname1 = [s(bonusname),"",""];
 
+bonusnamereal = s(bonusname1);
 
-
-
-
-
-
+if (vrace.includes('Trilobite')||vrace.includes('Olm')||vrace.includes('Android')) {
+bonusnamereal = "";
+}
 
 
 var e = r(21)
 
 
-document.getElementById("name").innerHTML = "<b>Name: </b>"+name;
+
+document.getElementById("name").innerHTML = "<b>Name: </b>"+name+bonusnamereal;
 document.getElementById("race").innerHTML = "<b>Race: </b>"+bonusrace+vrace;
 document.getElementById("class").innerHTML = "<b>Title: </b>"+title[e];
 document.getElementById("desc").innerHTML = simpleDesc+" "+description2[e]+"."+bonusdesc;
@@ -1595,3 +1727,7 @@ for (var j = 0; j<gear.length; j++) {
 
 
 }
+
+</script>
+
+
